@@ -1,5 +1,6 @@
 package com.example.basiclab;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -7,11 +8,17 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,8 +33,9 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Random rnd = new Random();
+                View someView = view.getRootView();
+                someView.setBackgroundColor(Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256)));
             }
         });
     }
@@ -46,19 +54,40 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Snackbar.make(findViewById(android.R.id.content),"Łustawienia", Snackbar.LENGTH_LONG).show();
-            return true;
-        } else if (id == R.id.action_destruction){
-            Snackbar.make(findViewById(android.R.id.content),"sudo rm -fr /*", Snackbar.LENGTH_LONG).show();
-            return true;
-        } else if (id == R.id.action_osiemGwiazd){
-            Snackbar.make(findViewById(android.R.id.content),"Jeb*ć PiS", Snackbar.LENGTH_LONG).show();
-            return true;
+        String msg = "";
+
+        switch(id){
+            case R.id.action_settings: msg = "Łustawienia"; break;
+            case R.id.action_destruction: msg = "sudo rm -fr /*"; break;
+            case R.id.action_osiemGwiazd: msg = "Jeb*ć PiS"; break;
+            case R.id.action_first: NavHostFragment.findNavController(getVisibleFragment())
+                    .navigate(R.id.action_global_FirstFragment);
+                msg = "First Fragment";
+                break;
+            case R.id.action_second: NavHostFragment.findNavController(getVisibleFragment())
+                    .navigate(R.id.action_global_SecondFragment);
+                msg = "Second Fragment";
+                break;
+            case R.id.action_third: NavHostFragment.findNavController(getVisibleFragment())
+                    .navigate(R.id.action_global_thirdFragment);
+                msg = "Third Fragment";
+                break;
         }
 
+        Snackbar.make(findViewById(R.id.rootLayout),msg, Snackbar.LENGTH_LONG).show();
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public Fragment getVisibleFragment(){
+        FragmentManager fragmentManager = MainActivity.this.getSupportFragmentManager();
+        List<Fragment> fragments = fragmentManager.getFragments();
+        if(fragments != null){
+            for(Fragment fragment : fragments){
+                if(fragment != null && fragment.isVisible())
+                    return fragment;
+            }
+        }
+        return null;
     }
 }

@@ -13,4 +13,13 @@
     <item
         android:id="@+id/action_osiemGwiazd"
         android:title="@string/action_osiemGwiazd" />
+    <item
+        android:id="@+id/action_first"
+        android:title="@string/action_first" />
+    <item
+        android:id="@+id/action_second"
+        android:title="@string/action_second" />
+    <item
+        android:id="@+id/action_third"
+        android:title="@string/action_third" />
 </menu>
